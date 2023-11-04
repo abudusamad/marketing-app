@@ -14,7 +14,6 @@ const hander = async (data: InputType): Promise<ReturnType> => {
 			error: "Unauthorized",
 		};
 	}
-
 	const { id, boardId } = data;
 
 	let list;
