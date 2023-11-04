@@ -31,7 +31,6 @@ const hander = async (data: InputType): Promise<ReturnType> => {
 				error: "Board not found",
 			};
 		}
-
 		list = await db.list.delete({
 			where: {
 				id,
