@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Medal } from "lucide-react";
+import { Facebook, GitBranchIcon, Medal, TwitchIcon } from "lucide-react";
 import Link from "next/link";
 
 const headingFont = localFont({
@@ -50,7 +50,7 @@ const MarketingPage = () => {
 				business to show.
 			</div>
 			<Button className="mt-6" size="xl" asChild>
-				<Link href="/sig-up">Get Marketing App for free</Link>
+                <Link href="/sig-up">Get Marketing App for free</Link>
 			</Button>
 		</div>
 	);
