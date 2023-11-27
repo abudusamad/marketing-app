@@ -1,17 +1,7 @@
+import { create } from "@/actions/create-board";
 import { Button } from "@/components/ui/button";
-import { db } from "@/lib/db";
 
 const OrganizationIdPage = () => {
-	async function create(formData: FormData) {
-		"use server";
-		const title = formData.get("title") as string;
-		await db.board.create({
-			data: {
-				title,
-			},
-		});
-	}
-
 	return (
 		<>
 			<form action={create}>
@@ -22,11 +12,10 @@ const OrganizationIdPage = () => {
 					required
 					placeholder="Organization ID"
 					className="border-black border p-2"
-                />
-                <Button type="submit" size="sm" className="ml-2 pt-4">
-                    submit
-                    
-            </Button>
+				/>
+				<Button type="submit" size="sm" className="ml-2 pt-4">
+					submit
+				</Button>
 			</form>
 		</>
 	);
