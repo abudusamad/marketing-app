@@ -1,4 +1,4 @@
-"use clent";
+"use client";
 
 import { useOrganizationList } from "@clerk/nextjs";
 import { useParams } from "next/navigation";
