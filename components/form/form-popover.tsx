@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/popover";
 import { useAction } from "@/hooks/use-action";
 import { FormInput } from "./form-input";
+import { FormPicker } from "./form-picker";
 import { FormSubmit } from "./form-submit";
 
 interface FormPopoverProps {
@@ -52,6 +53,7 @@ export const FormPopover = ({
 				</div>
 				<form action={onSubmit} className="space-y-4">
 					<div className="space-y-4">
+						<FormPicker id="image" errors={fieldErrors} />
 						<FormInput
 							id="title"
 							label="Board title"
