@@ -28,3 +28,5 @@ const FormError = ({ id, errors }: FormErrorProps) => {
 		</div>
 	);
 };
+
+export default FormError;   
