@@ -47,7 +47,7 @@ export const BoardOptions = ({ id }: BoardOptionsProps) => {
 						onClick={onDelete}
 						disabled={isLoading}
 						variant="ghost"
-						className="rounded-none w-full h-auto p-2 px-5 justify-start font-normal text-sm "
+						className="rounded-none w-full h-auto p-2 px-5 flex justify-end  font-normal text-sm "
 					>
 						Delete this board
 					</Button>
