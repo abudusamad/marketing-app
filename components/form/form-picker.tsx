@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import FormError from "./form-error";
-import { defaultImage } from "@/constants/image";
+import { defaultImage } from "@/constant/image";
 
 interface FormPickerProps {
 	id: string;
