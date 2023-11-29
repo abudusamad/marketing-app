@@ -1,27 +1,52 @@
 "use client";
 
+import { updateBoard } from "@/actions/update-board";
 import { FormInput } from "@/components/form/form-input";
 import { Button } from "@/components/ui/button";
+import { useAction } from "@/hooks/use-action";
 import { Board } from "@prisma/client";
-import { useState } from "react";
+import { ElementRef, useRef, useState } from "react";
+import { toast } from "sonner";
 
 interface BoardTitleFormProps {
 	data: Board;
 }
 
 export const BoardTitleForm = ({ data }: BoardTitleFormProps) => {
+	const { execute } = useAction(updateBoard, {
+		onSuccess: (data) => {
+			toast.success(`Board title updated to ${data.title}`);
+			disableEditing();
+		},
+		onError: (error) => {
+			toast.error(error);
+		},
+	});
+
 	const [isEditing, setIsEditing] = useState(false);
 	const [title, setTitle] = useState(data.title);
+
+	const formRef = useRef<ElementRef<"form">>(null);
+	const inputRef = useRef<ElementRef<"input">>(null);
 
 	const disableEditing = () => {
 		setIsEditing(false);
 	};
 	const enableEditing = () => {
 		setIsEditing(true);
+		setTimeout(() => {
+			inputRef.current?.focus();
+			inputRef.current?.select();
+		});
 	};
 
-	const onSumbit = (formData: FormData) => {
+	const onSubmit = (formData: FormData) => {
 		const title = formData.get("title") as string;
+
+		execute({
+			id: data.id,
+			title,
+		});
 
 		if (title) {
 			console.log(title);
@@ -30,7 +55,7 @@ export const BoardTitleForm = ({ data }: BoardTitleFormProps) => {
 
 	if (isEditing) {
 		return (
-			<form className="flex items-center gap-x-2">
+			<form action={onSubmit} className="flex items-center gap-x-2">
 				<FormInput
 					id={title}
 					type="text"
