@@ -18,7 +18,7 @@ const handler = async (data: InputType) => {
 
 	const [imageId, imageThumbUrl, imageFullUrl, imageLinkHTML, imageUserName] =
 		image.split("|");
-
+	
 	if (
 		!imageId ||
 		!imageThumbUrl ||

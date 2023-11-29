@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import FormError from "./form-error";
+import { defaultImage } from "@/constants/image";
 
 interface FormPickerProps {
 	id: string;
@@ -16,7 +17,7 @@ export const FormPicker = ({ id, errors }: FormPickerProps) => {
 	const { pending } = useFormStatus();
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [images, setImages] = useState<Array<Record<string, any>>>([]);
+	const [images, setImages] = useState<Array<Record<string, any>>>(defaultImage);
 	const [selectedImage, setSelectedImage] = useState(null);
 
 	useEffect(() => {
@@ -34,7 +35,7 @@ export const FormPicker = ({ id, errors }: FormPickerProps) => {
 				}
 			} catch (error) {
 				console.log(error);
-				setImages([]);
+				setImages(defaultImage);
 			} finally {
 				setIsLoading(false);
 			}
