@@ -1,12 +1,11 @@
+import { defaultImage } from "@/constant/image";
 import { unsplash } from "@/lib/unsplash";
 import { cn } from "@/lib/utils";
 import { Check, Loader2 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import FormError from "./form-error";
-import { defaultImage } from "@/constant/image";
 
 interface FormPickerProps {
 	id: string;
@@ -17,7 +16,8 @@ export const FormPicker = ({ id, errors }: FormPickerProps) => {
 	const { pending } = useFormStatus();
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [images, setImages] = useState<Array<Record<string, any>>>(defaultImage);
+	const [images, setImages] =
+		useState<Array<Record<string, any>>>(defaultImage);
 	const [selectedImage, setSelectedImage] = useState(null);
 
 	useEffect(() => {
@@ -84,20 +84,17 @@ export const FormPicker = ({ id, errors }: FormPickerProps) => {
 							<div className="absolute inset-y-0 h-full w-full bg-black/30 flex items-center justify-center">
 								<Check className="h-4 w-4 text-white" />
 							</div>
-                        )}
-                        <Link
-                            href={image.links.html}
-                            target="_blank"
-                            className="opcacity-0 group-hover:opacity-100 absolute
+						)}
+						<div
+							className="opcacity-0 group-hover:opacity-100 absolute
                             bottom-0 w-full text-[10px] truncate text-white hover:underline p-1 bg_black/50 transition"
-                        
-                        >
-                            {image.user.name}
-                        </Link>
+						>
+							{image.user.name}
+						</div>
 					</div>
 				))}
-            </div>
-            <FormError id="image" errors={errors} />
+			</div>
+			<FormError id="image" errors={errors} />
 		</div>
 	);
 };

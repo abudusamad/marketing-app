@@ -18,7 +18,7 @@ const handler = async (data: InputType) => {
 
 	const [imageId, imageThumbUrl, imageFullUrl, imageLinkHTML, imageUserName] =
 		image.split("|");
-	
+
 	if (
 		!imageId ||
 		!imageThumbUrl ||
@@ -49,7 +49,7 @@ const handler = async (data: InputType) => {
 			error: "Failed to create board",
 		};
 	}
-	revalidatePath(`/boards/${board.id}`);
+	revalidatePath(`/board/${board.id}`);
 	return { data: board };
 };
 
