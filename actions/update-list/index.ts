@@ -1,4 +1,4 @@
-"use sever";
+"use server";
 
 import { createSafeAction } from "@/lib/create-safe-action";
 import { db } from "@/lib/db";
@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { UpdateList } from "./schema";
 import { InputType, ReturnType } from "./types";
 
-const hander = async (data: InputType): Promise<ReturnType> => {
+const handler = async (data: InputType): Promise<ReturnType> => {
 	const { userId, orgId } = auth();
 	if (!userId || !orgId) {
 		return {
@@ -20,18 +20,6 @@ const hander = async (data: InputType): Promise<ReturnType> => {
 	let list;
 
 	try {
-		const board = await db.board.findUnique({
-			where: {
-				id: boardId,
-				orgId,
-			},
-		});
-		if (!board) {
-			return {
-				error: "Board not found",
-			};
-		}
-
 		list = await db.list.update({
 			where: {
 				id,
@@ -54,4 +42,4 @@ const hander = async (data: InputType): Promise<ReturnType> => {
 	return { data: list };
 };
 
-export const updateList = createSafeAction(UpdateList, hander);
+export const updateList = createSafeAction(UpdateList, handler);
