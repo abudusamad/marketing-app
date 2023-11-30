@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { useAction } from "@/hooks/use-action";
 import { Plus, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { ElementRef, useRef, useState } from "react";
+import { ElementRef, Key, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ListWrapper } from "./list-wrapper";
+import { useEventListener, useOnClickOutside } from "usehooks-ts";
 
 export const ListForm = () => {
 	const [isEditing, setIsEditing] = useState(false);
@@ -40,7 +41,16 @@ export const ListForm = () => {
 		onError: (error) => {
 			toast.error(error);
 		},
-	});
+    });
+    
+    const onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+            disableEditing();
+        }
+    }
+
+    useEventListener("keydown", onKeyDown);
+    useOnClickOutside(formRef, disableEditing);
 
 	const onSubmit = (formData: FormData) => {
 		const title = formData.get("title") as string;
