@@ -1,6 +1,7 @@
 "use client";
 
 import { FormSubmit } from "@/components/form/form-submit";
+import { FormTextarea } from "@/components/form/form-textarea";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
 import { forwardRef } from "react";
@@ -22,6 +23,10 @@ export const CardForm = forwardRef<HTMLTextAreaElement, CardFormProps>(
                     className="m-1 py-0.5 px-1 space-y-4"
                 
                 >
+                    <FormTextarea
+                        id="title"
+                    
+                    />
                     <input
                         type="hidden"
                         name="listId"
