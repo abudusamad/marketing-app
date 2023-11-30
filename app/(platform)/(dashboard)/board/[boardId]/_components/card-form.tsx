@@ -61,13 +61,8 @@ export const CardForm = forwardRef<HTMLTextAreaElement, CardFormProps>(
 			execute({
 				title,
 				listId,
-				boardId,
-			});
-
-			console.log({
-				title,
-				listId,
-				boardId,
+				boardId
+				
 			});
 		};
 
