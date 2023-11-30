@@ -15,16 +15,56 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 		};
 	}
 
-	const {  id, boardId } = data;
+	const { id, boardId } = data;
 
 	let list;
 
 	try {
+		const listToCopy = await db.list.findUnique({
+			where: {
+				id,
+				boardId,
+				board: {
+					orgId,
+				},
+			},
+			include: {
+				cards: true,
+			},
+		});
+		if (!listToCopy) {
+			return {
+				error: "List not found",
+			};
+		}
+
 		const lastList = await db.list.findFirst({
-			where: { id },
-			orderBy:{}
-		})
-		
+			where: { boardId },
+			orderBy: { order: "desc" },
+			select: { order: true },
+		});
+
+		const newList = lastList ? lastList.order + 1 : 1;
+
+		list = await db.list.create({
+			data: {
+				boardId: listToCopy.boardId,
+				title: `${listToCopy.title} - Copy`,
+				order: newList,
+				cards: {
+					createMany: {
+						data: listToCopy.cards.map((card) => ({
+							title: card.title,
+							description: card.description,
+							order: card.order,
+						})),
+					},
+				},
+			},
+			include: {
+				cards: true,
+			},
+		});
 	} catch (error) {
 		return {
 			error: "Failed to copy List",
