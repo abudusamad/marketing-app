@@ -35,6 +35,7 @@ export async function GET(
 				},
 			},
 		});
+		return NextResponse.json(card);
 	} catch (error) {
 		console.log("[Card] [Get] error", error);
 		return new NextResponse("Internal Server Error", { status: 500 });
