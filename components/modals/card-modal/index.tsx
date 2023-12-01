@@ -10,7 +10,10 @@ export const CardModal = () => {
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent>mascotsdsaxcvzxcvzxcvzxcvzxvc</DialogContent>
+			<DialogContent>
+				
+				
+			</DialogContent>
 		</Dialog>
 	);
 };
