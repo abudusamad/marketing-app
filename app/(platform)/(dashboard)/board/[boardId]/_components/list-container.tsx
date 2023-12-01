@@ -1,13 +1,14 @@
 "use client";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 
+import { updateCardOrder } from "@/actions/update-card-order";
+import { updateListOrder } from "@/actions/update-list-order";
+import { useAction } from "@/hooks/use-action";
 import { ListWithCards } from "@/types";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { ListForm } from "./list-form";
 import { ListItem } from "./list-item";
-import { useAction } from "@/hooks/use-action";
-import { updateListOrder } from "@/actions/update-list-order";
-import { toast } from "sonner";
 
 interface ListContainerProps {
 	data: ListWithCards[];
@@ -21,8 +22,6 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number) {
 	return result;
 }
 
-
-
 export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 	const [orderedData, setOrderedData] = useState(data);
 
@@ -33,109 +32,117 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 		onError: (error) => {
 			console.log("error");
 		},
-	})
+	});
+	const { execute: executeUpdateCardOrder } = useAction(updateCardOrder, {
+		onSuccess: () => {
+			toast.success("Card reordered");
+		},
+		onError: (error) => {
+			toast.error(error);
+		},
+	});
 
 	useEffect(() => {
 		setOrderedData(data);
 	}, [data]);
 
-	  const onDragEnd = (result: any) => {
-    const { destination, source, type } = result;
+	const onDragEnd = (result: any) => {
+		const { destination, source, type } = result;
 
-    if (!destination) {
-      return;
-    }
+		if (!destination) {
+			return;
+		}
 
-    // if dropped in the same position
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
+		// if dropped in the same position
+		if (
+			destination.droppableId === source.droppableId &&
+			destination.index === source.index
+		) {
+			return;
+		}
 
-    // User moves a list
-    if (type === "list") {
-      const items = reorder(
-        orderedData,
-        source.index,
-        destination.index,
-      ).map((item, index) => ({ ...item, order: index }));
+		// User moves a list
+		if (type === "list") {
+			const items = reorder(orderedData, source.index, destination.index).map(
+				(item, index) => ({ ...item, order: index })
+			);
 
-      setOrderedData(items);
-      execute({ items, boardId });
-    }
+			setOrderedData(items);
+			execute({ items, boardId });
+		}
 
-    // User moves a card
-    if (type === "card") {
-      let newOrderedData = [...orderedData];
+		// User moves a card
+		if (type === "card") {
+			let newOrderedData = [...orderedData];
 
-      // Source and destination list
-      const sourceList = newOrderedData.find(list => list.id === source.droppableId);
-      const destList = newOrderedData.find(list => list.id === destination.droppableId);
+			// Source and destination list
+			const sourceList = newOrderedData.find(
+				(list) => list.id === source.droppableId
+			);
+			const destList = newOrderedData.find(
+				(list) => list.id === destination.droppableId
+			);
 
-      if (!sourceList || !destList) {
-        return;
-      }
+			if (!sourceList || !destList) {
+				return;
+			}
 
-      // Check if cards exists on the sourceList
-      if (!sourceList.cards) {
-        sourceList.cards = [];
-      }
+			// Check if cards exists on the sourceList
+			if (!sourceList.cards) {
+				sourceList.cards = [];
+			}
 
-      // Check if cards exists on the destList
-      if (!destList.cards) {
-        destList.cards = [];
-      }
+			// Check if cards exists on the destList
+			if (!destList.cards) {
+				destList.cards = [];
+			}
 
-      // Moving the card in the same list
-      if (source.droppableId === destination.droppableId) {
-        const reorderedCards = reorder(
-          sourceList.cards,
-          source.index,
-          destination.index,
-        );
+			// Moving the card in the same list
+			if (source.droppableId === destination.droppableId) {
+				const reorderedCards = reorder(
+					sourceList.cards,
+					source.index,
+					destination.index
+				);
 
-        reorderedCards.forEach((card, idx) => {
-          card.order = idx;
-        });
+				reorderedCards.forEach((card, idx) => {
+					card.order = idx;
+				});
 
-        sourceList.cards = reorderedCards;
+				sourceList.cards = reorderedCards;
 
-        setOrderedData(newOrderedData);
-       
-        // User moves the card to another list
-      } else {
-        // Remove card from the source list
-        const [movedCard] = sourceList.cards.splice(source.index, 1);
+				setOrderedData(newOrderedData);
 
-        // Assign the new listId to the moved card
-        movedCard.listId = destination.droppableId;
+				executeUpdateCardOrder({
+					items: reorderedCards,
+					boardId,
+				});
+			} else {
+				const [movedCard] = sourceList.cards.splice(source.index, 1);
 
-        // Add card to the destination list
-        destList.cards.splice(destination.index, 0, movedCard);
+				movedCard.listId = destination.droppableId;
 
-        sourceList.cards.forEach((card, idx) => {
-          card.order = idx;
-        });
+				destList.cards.splice(destination.index, 0, movedCard);
 
-        // Update the order for each card in the destination list
-        destList.cards.forEach((card, idx) => {
-          card.order = idx;
-        });
+				sourceList.cards.forEach((card, idx) => {
+					card.order = idx;
+				});
 
-       
-    }
-  }
-			
-			
-
-		
-	}
+				destList.cards.forEach((card, idx) => {
+					card.order = idx;
+				});
+				setOrderedData(newOrderedData);
+				executeUpdateCardOrder({
+					items: [...sourceList.cards, ...destList.cards],
+					boardId,
+				});
+			}
+		}
+	};
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
 			<Droppable droppableId={boardId} type="list" direction="horizontal">
-				{(provided) => ( 
+				{(provided) => (
 					<ol
 						{...provided.droppableProps}
 						ref={provided.innerRef}
@@ -144,12 +151,12 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 						{orderedData?.map((list, index) => {
 							return <ListItem key={list.id} index={index} data={list} />;
 						})}
-						{provided.placeholder}	
+						{provided.placeholder}
 						<ListForm />
 						<div className="flex-shink-0 w-1" />
 					</ol>
 				)}
-			</Droppable> 
+			</Droppable>
 		</DragDropContext>
 	);
 };
