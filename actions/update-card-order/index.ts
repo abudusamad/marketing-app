@@ -15,17 +15,17 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 		};
 	}
 
-	const { items ,boardId} = data;
+	const { items, boardId } = data;
 
 	let cards;
 
 	try {
 		// TODO: This should be a transaction
 		cards = await Promise.all(
-			items.map((item) =>
+			items.map((card) =>
 				db.card.update({
 					where: {
-						id: item.id,
+						id: card.id,
 						list: {
 							board: {
 								orgId,
@@ -33,18 +33,19 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 						}
 					},
 					data: {
-						title: item.title,
-						order: item.order,
-						listId: item.listId,
+						title: card.title,
+						order: card.order,
+						listId: card.listId,
 					},
 				})
 			)
 		);
 
+
 		
 	} catch (error) {
 		return {
-			error: "Failed to pdate card",
+			error: "Failed to Update List",
 		};
 	}
 
