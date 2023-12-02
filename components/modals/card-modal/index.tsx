@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Activity } from "./activty";
 import { Description } from "./desciptions";
 import { Header } from "./header";
+import { Actions } from "./actions";
 
 export const CardModal = () => {
 	const id = useCardModal((state) => state.id);
@@ -38,13 +39,14 @@ export const CardModal = () => {
 							) : (
 								<Description data={cardData} />
 							)}
-							{!auditLogData ? (
+							{/* {!auditLogData ? (
 								<Activity.Sekeleton />
 							) : (
 								<Activity items={auditLogData} />
-							)}
+							)} */}
 						</div>
 					</div>
+					<Actions data={cardData}/>
 				</div>
 			</DialogContent>
 		</Dialog>
