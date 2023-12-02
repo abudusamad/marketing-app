@@ -1,23 +1,12 @@
-import { OrganizationProfile } from "@clerk/nextjs";
+import { Suspense } from "react";
+import { OrganizationSettings } from "./components/organizationSe";
 
 const SettingsPage = () => {
 	return (
 		<div className="w-full">
-			<OrganizationProfile
-				appearance={{
-					elements: {
-						rootBox: {
-							boxShadow: "none",
-							width: "100%",
-                        },
-                        card: {
-                            boarder: "1px solid #E5E7EB",
-                            boxShadow: "none",
-                            width: "100%",
-                        }
-					},
-				}}
-			/>
+			<Suspense fallback={<OrganizationSettings.Skeleton />}>
+				<OrganizationSettings />
+			</Suspense>
 		</div>
 	);
 };
