@@ -14,24 +14,11 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 			error: "Unauthorized",
 		};
 	}
-	const { id, boardId, listId } = data;
+	const { id, boardId} = data;
 
 	let card;
 
 	try {
-		const list = await db.list.findUnique({
-			where: {
-				id: boardId,
-				board: {
-					orgId,
-				},
-			},
-		});
-		if (!list) {
-			return {
-				error: "list not found",
-			};
-		}
 		card = await db.card.delete({
 			where: {
 				id,

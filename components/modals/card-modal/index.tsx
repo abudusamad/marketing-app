@@ -6,10 +6,9 @@ import { fetcher } from "@/lib/fetcher";
 import { CardWithList } from "@/types";
 import { AuditLog } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { Activity } from "./activty";
+import { Actions } from "./actions";
 import { Description } from "./desciptions";
 import { Header } from "./header";
-import { Actions } from "./actions";
 
 export const CardModal = () => {
 	const id = useCardModal((state) => state.id);
@@ -46,7 +45,7 @@ export const CardModal = () => {
 							)} */}
 						</div>
 					</div>
-					<Actions data={cardData}/>
+					{!cardData ? <Actions.Skeleton /> : <Actions data={cardData} />}
 				</div>
 			</DialogContent>
 		</Dialog>
