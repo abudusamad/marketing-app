@@ -8,6 +8,8 @@ import { createSafeAction } from "@/lib/create-safe-action";
 
 import { CreateList } from "./schema";
 import { InputType, ReturnType } from "./types";
+import { CreateAuditLog } from "@/lib/create-audit-log";
+import { ACTION, ENTITY_TYPE } from "@prisma/client";
 
 const hander = async (data: InputType): Promise<ReturnType> => {
 	const { userId, orgId } = auth();
@@ -48,6 +50,12 @@ const hander = async (data: InputType): Promise<ReturnType> => {
 				boardId,
 				order: newList,
 			},
+		});
+		await CreateAuditLog({
+			entityTitle: list.title,
+			entityId: list.id,
+			entityType: ENTITY_TYPE.BOARD,
+			action: ACTION.CREATE,
 		});
 	} catch (error) {
 		return {

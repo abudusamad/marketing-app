@@ -2,7 +2,7 @@
 
 import { createSafeAction } from "@/lib/create-safe-action";
 
-import { createAuditLog } from "@/lib/create-audit-log";
+import { CreateAuditLog } from "@/lib/create-audit-log";
 
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
@@ -57,7 +57,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 				listId: cardToCopy.listId,
 			},
 		});
-		 await createAuditLog({
+		 await CreateAuditLog({
 				entityTitle: card.title,
 				entityId: card.id,
 				entityType: ENTITY_TYPE.CARD,

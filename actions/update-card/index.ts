@@ -8,6 +8,8 @@ import { db } from "@/lib/db";
 
 import { UpdateCard } from "./schema";
 import { InputType, ReturnType } from "./types";
+import { ACTION, ENTITY_TYPE } from "@prisma/client";
+import { CreateAuditLog } from "@/lib/create-audit-log";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
 	const { userId, orgId } = auth();
@@ -34,6 +36,12 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 			data: {
 				...values,
 			},
+		});
+		await CreateAuditLog({
+			entityTitle: card.title,
+			entityId: card.id,
+			entityType: ENTITY_TYPE.CARD,
+			action: ACTION.UPDATE,
 		});
 	} catch (error) {
 		return {

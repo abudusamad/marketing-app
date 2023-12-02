@@ -7,9 +7,9 @@ import { CardWithList } from "@/types";
 import { AuditLog } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { Actions } from "./actions";
+import { Activity } from "./activty";
 import { Description } from "./desciptions";
 import { Header } from "./header";
-import { Activity } from "./activty";
 
 export const CardModal = () => {
 	const id = useCardModal((state) => state.id);
@@ -21,7 +21,7 @@ export const CardModal = () => {
 		queryFn: async () => fetcher(`/api/cards/${id}`),
 	});
 	const { data: auditLogData } = useQuery<AuditLog[]>({
-		queryKey: ["card", id],
+		queryKey: ["card-logs", id],
 		queryFn: async () => fetcher(`/api/cards/${id}/logs`),
 	});
 
