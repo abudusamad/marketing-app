@@ -7,7 +7,7 @@ type ProModalState = {
 };
 
 export const useProModal = create<ProModalState>((set) => ({
-	isOpen: false,
+	isOpen: true,
 	onClose: () => set({ isOpen: false }),
 	onOpen: () => set({ isOpen: true }),
 }));
