@@ -1,20 +1,18 @@
-import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
-import { ENTITY_TYPE } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { ENTITY_TYPE } from "@prisma/client";
+
+import { db } from "@/lib/db";
 
 export async function GET(
-	res: Response,
-	{
-		params,
-	}: {
-		params: { cardId: string };
-	}
+	request: Request,
+	{ params }: { params: { cardId: string } }
 ) {
 	try {
 		const { userId, orgId } = auth();
-		if (!userId || orgId) {
-			return new NextResponse("Unauthorised", { status: 401 });
+
+		if (!userId || !orgId) {
+			return new NextResponse("Unauthorized", { status: 401 });
 		}
 
 		const auditLogs = await db.auditLog.findMany({
@@ -25,11 +23,12 @@ export async function GET(
 			},
 			orderBy: {
 				createdAt: "desc",
-            },take: 3,
+			},
+			take: 3,
 		});
+
 		return NextResponse.json(auditLogs);
 	} catch (error) {
-		console.log("ACTIVITY_LOGS", error);
-		return new NextResponse("Internal Server Error", { status: 500 });
+		return new NextResponse("Internal Error", { status: 500 });
 	}
 }
