@@ -6,7 +6,7 @@ import { CreditCard } from "lucide-react";
 import Image from "next/image";
 
 interface InfoProps {
-	isPro?: boolean;
+	isPro: boolean;
 }
 
 export const Info = ({ isPro }: InfoProps) => {
@@ -30,7 +30,7 @@ export const Info = ({ isPro }: InfoProps) => {
 				<p className="font-semibold text-xl ">{organization?.name}</p>
 				<div className="flex items-center text-xs text-muted-foreground">
 					<CreditCard className="w-4 h-4 mr-1" />
-					Free
+					{isPro ? "Pro" : "Free"}
 				</div>
 			</div>
 		</div>
