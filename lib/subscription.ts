@@ -6,7 +6,7 @@ export const checkSubscription = async () => {
 	const { orgId } = auth();
 
 	if (!orgId) {
-		throw new Error("Unauthorized");
+		return false;
 	}
 
 	const orgSubscription = await db.orgSubscription.findUnique({
@@ -20,7 +20,7 @@ export const checkSubscription = async () => {
 	});
 
 	if (!orgSubscription) {
-		throw new Error("No subscription found");
+		return false;
 	}
 
 	const isValid =

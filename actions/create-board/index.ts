@@ -4,6 +4,7 @@ import { CreateAuditLog } from "@/lib/create-audit-log";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { db } from "@/lib/db";
 import { hasAvailableCount, increamentAvailableCount } from "@/lib/org-limit";
+import { checkSubscription } from "@/lib/subscription";
 import { auth } from "@clerk/nextjs";
 import { ACTION, ENTITY_TYPE } from "@prisma/client";
 import { revalidatePath } from "next/cache";
@@ -18,8 +19,9 @@ const handler = async (data: InputType) => {
 	}
 
 	const canCreate = await hasAvailableCount();
+	const isPro = await checkSubscription();
 
-	if (!canCreate) {
+	if (!canCreate && !isPro) {
 		return {
 			error: "You have reached your limit of boards. Please upgrade your plan",
 		};
@@ -56,7 +58,10 @@ const handler = async (data: InputType) => {
 			},
 		});
 
-		await increamentAvailableCount();
+		if (!isPro) {
+			await increamentAvailableCount();
+		}
+
 		await CreateAuditLog({
 			entityTitle: board.title,
 			entityId: board.id,
