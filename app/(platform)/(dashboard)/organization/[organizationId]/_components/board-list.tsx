@@ -6,7 +6,9 @@ import { redirect } from "next/navigation";
 import Hint from "@/components/Hint";
 import { FormPopover } from "@/components/form/form-popover";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MAX_FREE_BOARDS } from "@/constant/boards";
 import { db } from "@/lib/db";
+import { getAvailableCount } from "@/lib/org-limit";
 
 export const BoardList = async () => {
 	const { orgId } = auth();
@@ -24,6 +26,8 @@ export const BoardList = async () => {
 		},
 	});
 
+
+	const availaleCount = await getAvailableCount();
 	return (
 		<div className="space-y-4">
 			<div className="flex items-center font-semibold text-lg text-neutral-700">
@@ -36,7 +40,7 @@ export const BoardList = async () => {
 						key={board.id}
 						href={`/board/${board.id}`}
 						className="group relative aspect-video bg-no-repeat bg-center bg-cover bg-sky-700 rounded-sm h-full w-full p-2 overflow-hidden"
-						style={{ backgroundImage: `url(${board.imageThumbUrl})` }}
+						style={{ backgroundImage: `url(${board?.imageThumbUrl})` }}
 					>
 						<div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition" />
 						<p className="relative font-semibold text-white">{board.title}</p>
@@ -49,7 +53,7 @@ export const BoardList = async () => {
 					>
 						<p className="text-sm">Create new board</p>
 						<span className="text-xs">
-							
+							{MAX_FREE_BOARDS - availaleCount} remaining
 						</span>
 						<Hint
 							sideOffset={40}
