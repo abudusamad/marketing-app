@@ -24,7 +24,7 @@ export const checkSubscription = async () => {
 	}
 
 	const isValid =
-        orgSubscription.stripeCurrentPeriodEnd?.getTime()! + DAY_IN_MS > Date.now();
-    
-    return !!isValid;
+		orgSubscription.stripeCurrentPeriodEnd?.getTime()! + DAY_IN_MS > Date.now();
+
+	return !!isValid;
 };
